@@ -1,9 +1,28 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# Skye Powered — website
 
-# This is NOT the Next.js you know
+One-page marketing site for skyepowered.com. Next.js 16 App Router, React 19,
+TypeScript, Tailwind CSS v4. Fully static.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+## Layout
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+- `src/lib/site.ts` — all copy and links. Change content here, not in components.
+- `src/app/page.tsx` — the single page.
+- `src/app/layout.tsx` — metadata, fonts, mounts `<SkyBackground />`.
+- `src/app/globals.css` — theme tokens (day/night via `prefers-color-scheme`),
+  sky/cloud animation, `.surface` and `.link-tile` helpers.
+- `src/components/SkyBackground.tsx` — CSS/SVG animated clouds, no dependencies.
+- `src/components/Logo.tsx` — wraps `public/logo.svg`.
 
-<!-- END:nextjs-agent-rules -->
+## Conventions
+
+- Colors come from CSS custom properties surfaced to Tailwind via
+  `@theme inline` (`bg-background`, `text-foreground`, `text-muted`,
+  `text-on-accent`). Don't hardcode hex values in components.
+- Server components by default; nothing here needs `"use client"`.
+- Keep the page static — no runtime data fetching.
+
+## Checks
+
+```bash
+npm run lint && npm run build
+```

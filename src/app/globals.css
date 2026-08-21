@@ -1,26 +1,176 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Sky palette (day) */
+  --sky-top: #2f7fca;
+  --sky-mid: #7bbce8;
+  --sky-horizon: #dceffb;
+  --sun: 255 246 214;
+  --sun-opacity: 0.55;
+
+  /* Clouds */
+  --cloud-rgb: 255 255 255;
+  --cloud-far: 0.55;
+  --cloud-mid: 0.75;
+  --cloud-near: 0.92;
+
+  /* Surfaces & text */
+  --background: var(--sky-mid);
+  --foreground: #0f2338;
+  --muted: #33546f;
+  --card: 255 255 255;
+  --card-opacity: 0.62;
+  --card-border: 255 255 255;
+  --card-border-opacity: 0.75;
+  --on-accent: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Sky palette (night) */
+    --sky-top: #050b18;
+    --sky-mid: #0d1e38;
+    --sky-horizon: #1b3b5c;
+    --sun: 170 200 255;
+    --sun-opacity: 0.18;
+
+    --cloud-rgb: 150 180 220;
+    --cloud-far: 0.07;
+    --cloud-mid: 0.11;
+    --cloud-near: 0.16;
+
+    --background: var(--sky-mid);
+    --foreground: #e8f0f8;
+    --muted: #a8bed4;
+    --card: 12 26 46;
+    --card-opacity: 0.55;
+    --card-border: 160 195 230;
+    --card-border-opacity: 0.22;
+    --on-accent: #071527;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-on-accent: var(--on-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ---------------------------------------------------------------
+   Sky background
+   Discrete SVG clouds drifting right-to-left at three depths. Pure
+   CSS/SVG so there is no runtime cost or extra dependency. If this
+   ever needs real depth, swap <SkyBackground /> for a three.js canvas
+   and leave the rest of the page untouched.
+   --------------------------------------------------------------- */
+
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    var(--sky-top) 0%,
+    var(--sky-mid) 48%,
+    var(--sky-horizon) 100%
+  );
+}
+
+.sky-sun {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 55% 40% at 78% 6%,
+    rgb(var(--sun) / var(--sun-opacity)),
+    rgb(var(--sun) / 0) 70%
+  );
+}
+
+/* Stars: only visible against the night palette. */
+.sky-stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 14%, #fff, transparent),
+    radial-gradient(1px 1px at 27% 31%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 41% 9%, #fff, transparent),
+    radial-gradient(1px 1px at 55% 24%, #fff, transparent),
+    radial-gradient(2px 2px at 68% 12%, #fff, transparent),
+    radial-gradient(1px 1px at 79% 33%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 91% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 19% 42%, #fff, transparent),
+    radial-gradient(1px 1px at 62% 46%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 85% 41%, #fff, transparent);
+  background-repeat: no-repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sky-stars {
+    opacity: 0.75;
+  }
+}
+
+.cloud {
+  position: absolute;
+  left: 0;
+  top: var(--cloud-top);
+  width: var(--cloud-w);
+  color: rgb(var(--cloud-rgb) / var(--cloud-opacity));
+  filter: blur(var(--cloud-blur));
+  animation: cloud-cross var(--cloud-duration) linear var(--cloud-delay)
+    infinite;
+  will-change: transform;
+}
+
+.cloud svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@keyframes cloud-cross {
+  from {
+    transform: translate3d(100vw, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-1 * var(--cloud-w)), 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud {
+    animation: none;
+    /* Hold each cloud somewhere sensible instead of parking them all offscreen. */
+    transform: translate3d(var(--cloud-rest), 0, 0);
+  }
+}
+
+/* Frosted panel used for the main card and link tiles. */
+.surface {
+  background: rgb(var(--card) / var(--card-opacity));
+  border: 1px solid rgb(var(--card-border) / var(--card-border-opacity));
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.link-tile {
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease;
+}
+
+.link-tile:hover {
+  background: rgb(var(--card) / calc(var(--card-opacity) + 0.22));
+  transform: translateY(-2px);
 }
