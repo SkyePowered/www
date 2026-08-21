@@ -1,7 +1,7 @@
 # skyepowered.com
 
 One-page site for **Skye Powered, LLC**. Next.js 16 (App Router) + React 19 +
-TypeScript + Tailwind CSS v4. Statically rendered — no database, no API routes.
+TypeScript + Tailwind CSS v4. Statically rendered so no database, no API routes.
 
 ## Develop
 
@@ -36,7 +36,7 @@ there as you go.
 
 `src/components/SkyBackground.tsx` plus the sky section of
 `src/app/globals.css`. SVG clouds drifting right-to-left across three depth
-tiers, animated entirely in CSS — no three.js, no canvas, no extra dependency,
+tiers, animated entirely in CSS. That means no three.js, no canvas, no extra dependency,
 and it holds still under `prefers-reduced-motion`.
 
 Tune the clouds by editing the `clouds` array (position, size, blur, speed).
@@ -44,11 +44,11 @@ Day/night palettes are CSS custom properties at the top of `globals.css` and
 follow the OS `prefers-color-scheme`.
 
 If it ever needs real volumetric depth, swap `<SkyBackground />` in
-`src/app/layout.tsx` for a three.js canvas — nothing else on the page depends
+`src/app/layout.tsx` for a three.js canvas. Nothing else on the page depends
 on it.
 
 ## Deploy
 
-Static output, so anything works. Vercel is the least-effort path: import the
+Static output, so anything works. Current deployed on AWS Amplify. Import the
 repo, add `skyepowered.com` as a custom domain, point DNS. No environment
 variables are needed.
