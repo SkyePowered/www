@@ -18,7 +18,7 @@ npm run lint    # eslint
 
 ## Edit the content
 
-Everything text-and-links lives in [`src/lib/site.ts`](src/lib/site.ts) —
+Everything text-and-links lives in [`src/lib/site.ts`](src/lib/site.ts):
 company name, tagline, email, and the GitHub / LinkedIn / kevbarnes.com links.
 
 The prose paragraph is in [`src/app/page.tsx`](src/app/page.tsx).
@@ -29,7 +29,7 @@ The prose paragraph is in [`src/app/page.tsx`](src/app/page.tsx).
 2. Add it to `legalLinks` in `src/lib/site.ts`.
 
 The footer legal row renders itself from that array and stays hidden while the
-array is empty. `sitemap.ts` lists only the home page today — add new routes
+array is empty. `sitemap.ts` lists only the home page today. Add new routes
 there as you go.
 
 ## The sky background
